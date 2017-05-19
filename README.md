@@ -21,7 +21,7 @@ We use both 3D shapes from [ModelNet](http://modelnet.cs.princeton.edu/) and [PA
 
 Please download the dataset here: [[link]](https://www.dropbox.com/s/sk756qif5tfk9w3/dataset.zip?dl=0).
 
-The above dataset contains files `ModelNet10_res30_raw.mat` and `ModelNet40_res30_raw.mat` representing the voxelized version of Modelnet10/40 and  `PASCAL3D.mat` which represents voxelized PASCAL3D+ aligned with images.
+The above dataset contains files `ModelNet10_res30_raw.mat` and `ModelNet40_res30_raw.mat` representing the voxelized version of ModelNet10/40 and  `PASCAL3D.mat` which represents voxelized PASCAL3D+ aligned with images.
 
 Each ModelNet dataset contains a `train` and `test` split with each entry having `270001` dimension representing `[id|voxel]` in `[30x30x30]` resolution.
 
