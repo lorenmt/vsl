@@ -40,7 +40,7 @@ Please use `vsl_main.py` for general 3D shape learning experiments, and `vsl_imr
 `global_latent_dim` | 20 | 10|10|5|
 `local_latent_dim` | 10 | 5|5|2|
 `local_latent_num` | 5 | 5|5|3|
-`batch_size` | 200 | 10 | 40 | 5|
+`batch_size` | 200 | 100 | 40 | 5|
 
 The source codes are fully commented. For any more details please look over the paper and source code.
 
