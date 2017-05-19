@@ -272,7 +272,7 @@ local_latent_dim   = 10
 local_latent_num   = 5
 obj_res     = 30
 batch_size  = 200
-print_step  = 5
+print_step  = 1
 total_epoch = 500
 
 # 3D visualization
@@ -389,20 +389,21 @@ plt.xticks([])
 plt.yticks([])
 plt.axis('tight')
 plt.show()
-plt.savefig('plot/tsne.png')
+plt.savefig('plots/tsne.png')
 
 
 # shape generation with Gaussian noise
 '''please fetch model id number from ModelNet: http://modelnet.cs.princeton.edu/
 ModelNet40 and ModelNet10 has 40 and 10 classes respectively with alphabetical naming order.
-Here is the example id = 1 means with all model in "airplane" class. '''
+Here is the example: id = 1 means with all models in "airplane" class. '''
 id = 1
+test_all  = np.transpose(data['test'])
 test_indx  = np.where(test_all[:,0] == id)
 test  = test_all[test_indx[-0],1:]
 x_test = test_all[test_indx[0][0]:test_indx[0][0]+batch_size,1:].reshape([batch_size, obj_res, obj_res, obj_res, 1])
 
-z = VSL.sess.run(VSL.latent_feature, feed_dict={VSL.x: x_train})
-z_new = z + np.random.normal(scale=0.02, size=[batch_size, ])
+z = VSL.sess.run(VSL.latent_feature, feed_dict={VSL.x: x_test})
+z_new = z + np.random.normal(scale=0.02, size=[batch_size, local_latent_dim*local_latent_num+global_latent_dim])
 for i in range(20):
     draw_sample(VSL.sess.run(VSL.x_rec[i, :], feed_dict={VSL.latent_feature: z_new}), 'plots/rec_{:d}.png'.format(i))
     mlab.close()
@@ -410,14 +411,14 @@ for i in range(20):
 
 # shape interpolation
 '''shape interpolation visualization from two reconstructed shapes.
-id1 and id2 means two shapes instances in the reconstructed shape batches.
-note: id numbers cannot exceed the batch_size.'''
+id1 and id2 means two shape instances in the reconstructed shape batches.
+note: id number cannot exceed the batch_size.'''
 z = VSL.sess.run(VSL.latent_feature, feed_dict={VSL.x: x_test})
-id1 = 40
-id2 = 11
+id1 = 8
+id2 = 0
 d = z[id1, :] - z[id2, :]
 for i in range(7):
-    draw_sample(VSL.sess.run(VSL.x_rec[id2, :], feed_dict={VSL.latent_feature: z}), 'plots/interpolation_conetoilet-{:d}.png'.format(i))
+    draw_sample(VSL.sess.run(VSL.x_rec[id2, :], feed_dict={VSL.latent_feature: z}), 'plots/interpolation_airplane-{:d}.png'.format(i))
     mlab.close()
     z[id2, :] = z[id2, :] + d / 6
 

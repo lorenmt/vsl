@@ -327,7 +327,7 @@ local_latent_num   = 3
 obj_res     = 30
 batch_size  = 5
 print_step  = 2
-total_epoch = 150
+total_epoch = 10
 
 # 3D visualization
 def draw_sample(voxel,  savepath):
@@ -369,7 +369,7 @@ VSL = VarShapeLearner(obj_res=obj_res,
                       local_latent_num=local_latent_num)
 
 # load saved parameters here, comment this to train model from scratch.
-VSL.saver.restore(VSL.sess, os.path.abspath('parameters/sofa-140-3-2-5-cost-0.4368.ckpt'))
+#VSL.saver.restore(VSL.sess, os.path.abspath('parameters/your_model_name.ckpt'))
 
 def unison_shuffled_copies(a, b):
     '''solution using: 
@@ -401,7 +401,7 @@ imageid_train = image_train[train_indx[0],:]
 for epoch in range(total_epoch):
     cost     = np.zeros(4, dtype=np.float32)
     avg_cost = np.zeros(4, dtype=np.float32)
-    train_batch = int(image_train.shape[0] / batch_size)
+    train_batch = int(imageid_train.shape[0] / batch_size)
 
     index = epoch + 0  # correct the training index, set 0 for training from scratch
 
@@ -418,10 +418,10 @@ for epoch in range(total_epoch):
 
     # iterate for all batches
     for i in range(train_batch):
-        x_train = model_train[batch_size*i:batch_size*(i+1),1:].reshape([batch_size, obj_res, obj_res, obj_res, 1])
-        y_train = image_train[batch_size*i:batch_size*(i+1),:]
+        x_train = modelid_train[batch_size*i:batch_size*(i+1),:].reshape([batch_size, obj_res, obj_res, obj_res, 1])
+        y_train = imageid_train[batch_size*i:batch_size*(i+1),:]
 
-        # calculate and average kl and vae loss for each batch
+        # calculate and average kl, rec and latent loss for each batch
         cost[0] = np.mean(VSL.sess.run(VSL.kl_loss_all, feed_dict={VSL.x: x_train, VSL.y: y_train,
                                                                    VSL.gamma: gamma, VSL.keep_prob: 0.2}))
         cost[1] = np.mean(VSL.sess.run(VSL.rec_loss, feed_dict={VSL.x: x_train, VSL.y: y_train,
@@ -429,55 +429,56 @@ for epoch in range(total_epoch):
         cost[2] = np.mean(VSL.sess.run(VSL.lat_loss, feed_dict={VSL.x: x_train, VSL.y: y_train,
                                                                 VSL.gamma: gamma, VSL.keep_prob: 0.2}))
         cost[3] = VSL.model_fit(x_train, y_train, gamma, 0.2)
-        avg_cost[index, :] += cost / train_batch
+
+        avg_cost += cost / train_batch
 
     print("Epoch: {:04d} | kl-loss: {:.4f} + rec-loss: {:.4f} + lat_loss: {:.4f} = total-loss: {:.4f}"
-          .format(index, avg_cost[index, 0], avg_cost[index, 1], avg_cost[index, 2], avg_cost[index, 3]))
-
-    # train and test IOU
-    test_batch = int(modelid_test.shape[0] / batch_size)
-    z_train = [[0]]*test_batch
-    z_test = [[0]]*test_batch
-    for i in range(test_batch):
-        x_train = modelid_train[batch_size * i:batch_size * (i + 1), :].reshape([batch_size, obj_res, obj_res, obj_res, 1])
-        y_train = imageid_train[batch_size * i:batch_size * (i + 1), :]
-        x_test = modelid_test[batch_size * i:batch_size * (i + 1), :].reshape([batch_size, obj_res, obj_res, obj_res, 1])
-        y_test = imageid_test[batch_size * i:batch_size * (i + 1), :]
-
-        z_train[i] = VSL.sess.run(VSL.learned_feature, feed_dict={VSL.x: x_train, VSL.y: y_train, VSL.gamma: gamma, VSL.keep_prob:1})
-        z_test[i] = VSL.sess.run(VSL.learned_feature, feed_dict={VSL.x: x_test, VSL.y: y_test, VSL.gamma: gamma, VSL.keep_prob:1})
-
-        if i == 0:
-            train_rec = VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_train[i]})
-            test_rec = VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_test[i]})
-        else:
-            train_rec = np.concatenate((train_rec,  VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_train[i]})))
-            test_rec = np.concatenate((test_rec,  VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_test[i]})))
-
-    train_rec = np.floor(train_rec + 0.5)
-    train_rec = train_rec.reshape(len(train_rec), obj_res ** 3)
-
-    test_rec = np.floor(test_rec + 0.5)
-    test_rec = test_rec.reshape(len(test_rec), obj_res ** 3)
-
-    prob_train = 0
-    prob_test = 0
-    test_batch = int(modelid_test.shape[0] / batch_size)
-    for i in range(batch_size * test_batch):
-        prob_model = IOU(train_rec[i, :], modelid_train[i, :])
-        prob_train = prob_model / (batch_size * test_batch) + prob_train
-
-        prob_model = IOU(test_rec[i, :], modelid_test[i, :])
-        prob_test = prob_model / (batch_size * test_batch) + prob_test
-
-    print('IOU - {} - Train: {:.4f}, Test: {:.4f}'.format(name_list[id-1], prob_train, prob_test))
+          .format(index, avg_cost[0], avg_cost[1], avg_cost[2], avg_cost[3]))
 
     if index % print_step == 0:
         draw_sample(VSL.sess.run(VSL.x_rec[0,:], feed_dict={VSL.x: x_train, VSL.y: y_train, VSL.gamma: gamma}), 'plots/rec-%d.png' % index)
         mlab.close()
 
-        VSL.saver.save(VSL.sess, os.path.abspath('parameters/{}-{:03d}-5-5-10-cost-{:.4f}.ckpt'
-                                                 .format(name_list[id-1], index, avg_cost[index, 3])))
+        VSL.saver.save(VSL.sess, os.path.abspath('parameters/{}-{:03d}-3-2-5-cost-{:.4f}.ckpt'
+                                                 .format(name_list[id-1], index, avg_cost[3])))
+
+# IOU training and testing results
+test_batch = int(modelid_test.shape[0] / batch_size)
+z_train = [[0]]*test_batch
+z_test = [[0]]*test_batch
+for i in range(test_batch):
+    x_train = modelid_train[batch_size * i:batch_size * (i + 1), :].reshape([batch_size, obj_res, obj_res, obj_res, 1])
+    y_train = imageid_train[batch_size * i:batch_size * (i + 1), :]
+    x_test = modelid_test[batch_size * i:batch_size * (i + 1), :].reshape([batch_size, obj_res, obj_res, obj_res, 1])
+    y_test = imageid_test[batch_size * i:batch_size * (i + 1), :]
+
+    z_train[i] = VSL.sess.run(VSL.learned_feature, feed_dict={VSL.x: x_train, VSL.y: y_train, VSL.gamma: gamma, VSL.keep_prob:1})
+    z_test[i] = VSL.sess.run(VSL.learned_feature, feed_dict={VSL.x: x_test, VSL.y: y_test, VSL.gamma: gamma, VSL.keep_prob:1})
+
+    if i == 0:
+        train_rec = VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_train[i]})
+        test_rec = VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_test[i]})
+    else:
+        train_rec = np.concatenate((train_rec,  VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_train[i]})))
+        test_rec = np.concatenate((test_rec,  VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_test[i]})))
+
+train_rec = np.floor(train_rec + 0.5)
+train_rec = train_rec.reshape(len(train_rec), obj_res ** 3)
+
+test_rec = np.floor(test_rec + 0.5)
+test_rec = test_rec.reshape(len(test_rec), obj_res ** 3)
+
+prob_train = 0
+prob_test = 0
+test_batch = int(modelid_test.shape[0] / batch_size)
+for i in range(batch_size * test_batch):
+    prob_model = IOU(train_rec[i, :], modelid_train[i, :])
+    prob_train = prob_model / (batch_size * test_batch) + prob_train
+
+    prob_model = IOU(test_rec[i, :], modelid_test[i, :])
+    prob_test = prob_model / (batch_size * test_batch) + prob_test
+
+print('IOU - {} - Train: {:.4f}, Test: {:.4f}'.format(name_list[id-1], prob_train, prob_test))
 
 
 # image reconstruction
@@ -489,7 +490,7 @@ gamma = 5e-3
 z_learned = [[0]]*test_batch
 for i in range(test_batch):
     x_train = modelid_test[batch_size * i:batch_size * (i + 1), :].reshape([batch_size, obj_res, obj_res, obj_res, 1])
-    y_train = imageid_test[batch_size * i:batch_size * (i+1), :]
+    y_train = imageid_test[batch_size * i:batch_size * (i + 1), :]
 
     z_learned[i] = VSL.sess.run(VSL.learned_feature, feed_dict={VSL.x: x_train, VSL.y: y_train, VSL.gamma: gamma, VSL.keep_prob:1})
     if i == 0:
@@ -497,16 +498,16 @@ for i in range(test_batch):
     else:
         A = np.concatenate((A,  VSL.sess.run(VSL.x_rec, feed_dict={VSL.latent_feature: z_learned[i]})))
 
-    A = np.floor(A + 0.5)
-    A = A.reshape(len(A), obj_res ** 3)
+A = np.floor(A + 0.5)
+A = A.reshape(len(A), obj_res ** 3)
 
 # plot image and its 3d reconstructed model
 for i in range(20):
     plt.imshow(imageid_test[i, :])
     plt.axis('off')
-    plt.savefig('plots/{}-im{:%d}.png'.format(name_list[id-1], i))
+    plt.savefig('plots/{}-im{:d}.png'.format(name_list[id-1], i))
     plt.close()
-    draw_sample(A[i, :], 'plots/{}-md{:%d}.png'.format(name_list[id-1], i))
+    draw_sample(A[i, :], 'plots/{}-md{:d}.png'.format(name_list[id-1], i))
     mlab.close()
 
 
