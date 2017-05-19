@@ -23,18 +23,19 @@ Please download the dataset here: [[link]](https://www.dropbox.com/s/sk756qif5tf
 
 The above dataset contains files `ModelNet10_res30_raw.mat` and `ModelNet40_res30_raw.mat` representing voxelized version of Modelnet10/40 and  `PASCAL3D.mat` which represents voxelized PASCAL3D+ aligned with images.
 
-Each ModelNet dataset contains `train` and `test` split with each entry has `270001` dimension representing `[id|voxel]` in 30x30x30 resolution.
+Each ModelNet dataset contains `train` and `test` split with each entry has `270001` dimension representing `[id|voxel]` in `[30x30x30]` resolution.
 
-PASCAL3D contains `image_train`, `model_train`, `image_test`, `model_test` which were defined in [Kar, et al](https://github.com/akar43/CategoryShapes). Each entry of `model` again is in `270001` dimension which is similar defined in ModelNet and each entry of `image` is in `[100,100,3]` representing [100x100] RGB images.
+PASCAL3D contains `image_train`, `model_train`, `image_test`, `model_test` which were defined in [Kar, et al](https://github.com/akar43/CategoryShapes). Each entry of `model` again is in `270001` dimension which is similar defined in ModelNet and each entry of `image` is in `[100,100,3]` dimension representing [100x100] RGB images.
 
-##Parameters
+## Parameters
 We have also included the pre-trained model for parameters can be downloaded [here](https://www.dropbox.com/s/pz5kqi8guq0jxgm/parameters.zip?dl=0).
 
-##Training VSL
+## Training VSL
 Please download `dataset` and `parameters` (if using pre-trained parameters) from links in the previous sections and extract them in the same folder of this repository.
 
 Please use `vsl_main.py` for general 3D shape learning experiments, and `vsl_imrec.py` for image reconstruction experiment. For correctly using the hyper-parameters in the pre-trained model and consistent with the other experiment settings in the paper, please define hyper-parameters as follows,
-||ModelNet40 | ModelNet10 | PASCAL3D (jointly) | PASCAL3D (separtely)
+
+||ModelNet40 | ModelNet10 | PASCAL3D (jointly) | PASCAL3D (separtely)|
 |---|---|---|---|---|
 `global_latent_dim` | 20 | 10|10|5|
 `local_latent_dim` | 10 | 5|5|2|
@@ -52,7 +53,7 @@ If you found this work is useful for your research, please consiering cite:
 ```
 @article{liu2017learning,
   title={Learning a Hierarchical Latent-Variable Model of Voxelized 3D Shapes},
-  author={Liu, Shikun and Ororbia II, Alexander and Giles, C Lee},
+  author={Liu, Shikun and Ororbia, II and Alexander, G and Giles, C Lee},
   journal={arXiv preprint arXiv:1705.05994},
   year={2017}
 }
