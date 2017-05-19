@@ -42,7 +42,7 @@ Please use `vsl_main.py` for general 3D shape learning experiments, and `vsl_imr
 `local_latent_num` | 5 | 5|5|3|
 `batch_size` | 200 | 100 | 40 | 5|
 
-The source codes are fully commented. For any more details please look over the paper and source code.
+The implementations are fully commented. For any more details, please look over the paper and source code.
 
 Normally, training VSL from scratch requires 2 days on ModelNet in a fast computer, and requires 20-40 minutes on separately-trained image reconstruction experiment.
 
