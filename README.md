@@ -14,10 +14,10 @@ VSL was written in `python 3.6`. For running the code, please make sure the foll
 - scikit-learn 0.18
 - tensorflow 1.0
 
-Most of which can be directly installed using `pip` command. However, `mayavi` which is used for 3D voxel visualization is recommended to be installed using `conda` enviroment (for simplicity).
+Most of which can be directly installed using `pip` command. However, `mayavi` which is used for 3D voxel visualization is recommended to be installed using `conda` environment (for simplicity).
 
 ## Dataset
-We use both 3D shapes from [ModelNet](http://modelnet.cs.princeton.edu/) and [PASCAL 3D+ v1.0](http://cvgl.stanford.edu/projects/pascal3d.html) aligned with images in [PASCAL VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html) for training VSL. ModeNet is used for general 3D shape learning including shape geneartion, interpolation and classification. PASCAL 3D is only used for image reconsturction.
+We use both 3D shapes from [ModelNet](http://modelnet.cs.princeton.edu/) and [PASCAL 3D+ v1.0](http://cvgl.stanford.edu/projects/pascal3d.html) aligned with images in [PASCAL VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html) for training VSL. ModeNet is used for general 3D shape learning including shape generation, interpolation and classification. PASCAL 3D is only used for image reconstruction.
 
 Please download the dataset here: [[link]](https://www.dropbox.com/s/sk756qif5tfk9w3/dataset.zip?dl=0).
 
@@ -35,7 +35,7 @@ Please download `dataset` and `parameters` (if using pre-trained parameters) fro
 
 Please use `vsl_main.py` for general 3D shape learning experiments, and `vsl_imrec.py` for image reconstruction experiment. For correctly using the hyper-parameters in the pre-trained model and consistent with the other experiment settings in the paper, please define hyper-parameters as follows,
 
-||ModelNet40 | ModelNet10 | PASCAL3D (jointly) | PASCAL3D (separtely)|
+||ModelNet40 | ModelNet10 | PASCAL3D (jointly) | PASCAL3D (separately)|
 |---|---|---|---|---|
 `global_latent_dim` | 20 | 10|10|5|
 `local_latent_dim` | 10 | 5|5|2|
@@ -44,11 +44,11 @@ Please use `vsl_main.py` for general 3D shape learning experiments, and `vsl_imr
 
 The source codes are fully commented. For any more details please look over the paper and source code.
 
-Normally, training VSL from scratch requires 2 days on ModelNet in a fast computer, and requires 10-20 minutes on separtely-trained image reconstruction experiment.
+Normally, training VSL from scratch requires 2 days on ModelNet in a fast computer, and requires 20-40 minutes on separately-trained image reconstruction experiment.
 
 
 ## Citation
-If you found this work is useful for your research, please consiering cite:
+If you found this work is useful for your research, please considering cite:
 
 ```
 @article{liu2017learning,
