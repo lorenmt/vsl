@@ -53,7 +53,7 @@ If you found this code/work to be useful in your own research, please considerin
 ```
 @article{liu2017learning,
   title={Learning a Hierarchical Latent-Variable Model of 3D Shapes},
-  author={Liu, Shikun and Giles, C Lee，and Ororbia II, Alexander and G},
+  author={Liu, Shikun and Giles, C Lee，and Ororbia II, and Alexander, G},
   journal={arXiv preprint arXiv:1705.05994},
   year={2017}
 }
