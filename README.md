@@ -1,9 +1,11 @@
 # Variational Shape Learner
 
-This repository contains the source code to support the paper: [Learning a Hierarchical Latent-Variable Model of Voxelized 3D Shapes](https://arxiv.org/abs/1705.05994), introduced by [Shikun Liu](http://shikun.io/), [C. Lee Giles](https://clgiles.ist.psu.edu/), [Alexander G. Ororbia II](http://www.personal.psu.edu/ago109/).
+This repository contains the source code to support the paper: [Learning a Hierarchical Latent-Variable Model of Voxelized 3D Shapes](https://arxiv.org/abs/1705.05994), introduced by [Shikun Liu](http://shikun.io/), [C. Lee Giles](https://clgiles.ist.psu.edu/), [Alexander G. Ororbia II](http://www.personal.psu.edu/ago109/). 
 
 <img src="plots/vis_1.png"  width="100px"/><img src="plots/vis_2.png"  width="100px"/><img src="plots/vis_3.png"  width="100px"/>
 <img src="plots/vis_4.png"  width="80px"/><img src="plots/vis_5.png"  width="100px"/><img src="plots/vis_6.png"  width="100px"/><img src="plots/vis_7.png"  width="100px"/><img src="plots/vis_8.png"  width="100px"/><img src="plots/vis_9.png"  width="80px"/>
+
+For more visual results, please visit our project page [here](http://shikun.io/papers/vsl.html).
 
 ## Requirements
 VSL was written in `python 3.6`. In order to run the code, please make sure the following packages have been installed.
