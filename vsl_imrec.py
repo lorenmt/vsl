@@ -288,14 +288,14 @@ class VarShapeLearner(object):
     # define VSL loss and optimizer
     def _model_loss_optimizer(self):
         # define reconstruction loss (binary cross-entropy)
-        self.rec_loss = -tf.reduce_sum(self.x * tf.log(1e-5 + self.x_rec)
-                                       +(1-self.x) * tf.log(1e-5 + 1 - self.x_rec), axis=1)
+        self.rec_loss = -tf.reduce_mean(self.x * tf.log(1e-5 + self.x_rec)
+                                       +(1-self.x) * tf.log(1e-5 + 1 - self.x_rec), axis=(1, 2))
 
-        # define kl loss KL(p(z|x)||q(z))
+        # define kl loss
         for i in range(self.local_latent_num + 1):
             self.kl_loss[i] = -0.5 * tf.reduce_sum(1 + 2 * self.z_logstd[i] - tf.square(self.z_mean[i]) - tf.square(tf.exp(self.z_logstd[i])), axis=1)
 
-        self.kl_loss_all = tf.add_n(self.kl_loss)
+        self.kl_loss_all = tf.add_n(self.kl_loss) / (self.local_latent_num + 1)
 
         # latent image decoder loss
         self.lat_loss = tf.nn.l2_loss(tf.abs(self.latent_feature - self.learned_feature))
