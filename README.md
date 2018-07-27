@@ -56,7 +56,7 @@ If you found this code/work to be useful in your own research, please considerin
 @article{liu2018learning,
   title={Learning a Hierarchical Latent-Variable Model of 3D Shapes},
   author={Liu, Shikun and Giles, C Lee，and Ororbia II, and Alexander, G},
-  journal={International Conference on 3D Vision},
+  journal={International Conference on 3D Vision (3DV)},
   year={2018}
 }
 ```
