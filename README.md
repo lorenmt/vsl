@@ -53,10 +53,10 @@ Normally, training VSL from scratch requires 40 hours on ModelNet on a fast comp
 If you found this code/work to be useful in your own research, please considering citing the following:
 
 ```
-@article{liu2018learning,
+@inproceedings{liu2018learning,
   title={Learning a Hierarchical Latent-Variable Model of 3D Shapes},
   author={Shikun Liu and C. Lee Giles and Alexander G. Ororbia II},
-  booktitle={International Conference on 3D Vision (3DV)},
+  booktitle={2018 International Conference on 3D Vision (3DV)},
   year={2018}
 }
 ```
