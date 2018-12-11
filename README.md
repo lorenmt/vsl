@@ -54,10 +54,12 @@ If you found this code/work to be useful in your own research, please considerin
 
 ```
 @inproceedings{liu2018learning,
-  title={Learning a Hierarchical Latent-Variable Model of 3D Shapes},
-  author={Shikun Liu and C. Lee Giles and Alexander G. Ororbia II},
+  title={Learning a hierarchical latent-variable model of 3d shapes},
+  author={Liu, Shikun and Giles, Lee and Ororbia, Alexander},
   booktitle={2018 International Conference on 3D Vision (3DV)},
-  year={2018}
+  pages={542--551},
+  year={2018},
+  organization={IEEE}
 }
 ```
 
