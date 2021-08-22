@@ -21,7 +21,7 @@ Most of the above can be directly installed using the `pip` command. However, we
 ## Dataset
 We use both 3D shapes from [ModelNet](http://modelnet.cs.princeton.edu/) and [PASCAL 3D+ v1.0](http://cvgl.stanford.edu/projects/pascal3d.html) aligned with images in [PASCAL VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html) for training our proposed VSL. ModelNet is used for general 3D shape learning including shape generation, interpolation and classification. PASCAL 3D is only used for image reconstruction.
 
-Please download the dataset here: [[link]](https://www.dropbox.com/s/sk756qif5tfk9w3/dataset.zip?dl=0).
+Please download the dataset here: [[link]](https://www.dropbox.com/sh/ba350678f7pbwx8/AAC8-2X1p4BiOKlyYuuxFcDBa?dl=0).
 
 The above dataset contains files `ModelNet10_res30_raw.mat` and `ModelNet40_res30_raw.mat` representing the voxelized version of ModelNet10/40 and  `PASCAL3D.mat` which represents voxelized PASCAL3D+ aligned with images.
 
